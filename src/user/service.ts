@@ -3,12 +3,12 @@ import User from './model';
 
 class UserService {
   async createOne(req: Request, res: Response) {
-    const data = new User({
-      name: req.body.name,
-      email: req.body.email,
-    });
-
     try {
+      const data = new User({
+        name: req.body.name,
+        email: req.body.email,
+      });
+
       const saved = await data.save();
       res.status(200).json(saved);
     } catch (error: any) {

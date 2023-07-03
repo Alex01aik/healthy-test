@@ -12,16 +12,17 @@ class AppointmentService {
     req: Request & { body: CreateOneAppointmentArgs },
     res: Response,
   ) {
-    const userId: string = req.body.userId;
-    const doctorId: string = req.body.doctorId;
-    const date: Date = new Date(req.body.date);
-    const duration: number = Number(req.body.duration);
-
-    date.setSeconds(0);
-    date.setMilliseconds(0);
-
     try {
+      const userId: string = req.body.userId;
+      const doctorId: string = req.body.doctorId;
+      const date: Date = new Date(req.body.date);
+      const duration: number = Number(req.body.duration);
+
+      date.setSeconds(0);
+      date.setMilliseconds(0);
+
       await this.validate(userId, doctorId, date, duration);
+
       const data = new Appointment({
         user: userId,
         doctor: doctorId,
@@ -30,8 +31,8 @@ class AppointmentService {
       });
 
       const saved = await data.save();
-
       res.status(200).json(saved);
+      
     } catch (error: any) {
       res.status(400).json({ message: error?.message });
     }

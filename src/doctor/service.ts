@@ -3,12 +3,12 @@ import Doctor from './model';
 
 class DoctorService {
   async createOne(req: Request, res: Response) {
-    const data = new Doctor({
-      name: req.body.name,
-      working_hours: req.body.working_hours,
-    });
-
     try {
+      const data = new Doctor({
+        name: req.body.name,
+        working_hours: req.body.working_hours,
+      });
+
       const saved = await data.save();
       res.status(200).json(saved);
     } catch (error: any) {

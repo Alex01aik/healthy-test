@@ -5,20 +5,11 @@ import userRouter from './user/router';
 import doctorRouter from './doctor/router';
 import mongoose from 'mongoose';
 import notificationService from './notification/service';
+import { connect } from './db/connect';
 import dotenv from 'dotenv';
 
 dotenv.config();
-
-mongoose.connect(process.env.DB_URL ?? '');
-const database = mongoose.connection;
-
-database.on('error', (error) => {
-  console.log(error);
-});
-
-database.once('connected', () => {
-  console.log('Database Connected');
-});
+connect();
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -30,7 +21,10 @@ app.use('/appointment', appointmentRouter);
 app.use('/user', userRouter);
 app.use('/doctor', doctorRouter);
 
-// setInterval(notificationService.findCustomers, Number(process.env.MIN_PERIOD) * 60 * 1000);
+setInterval(
+  notificationService.findCustomers,
+  Number(process.env.MIN_PERIOD) * 60 * 1000,
+);
 
 app.listen(port, () => {
   console.log(`"Healthy" server is running on port ${port}`);
