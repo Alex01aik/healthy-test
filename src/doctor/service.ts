@@ -3,7 +3,6 @@ import Doctor from './model';
 
 class DoctorService {
   async createOne(req: Request, res: Response) {
-    
     const data = new Doctor({
       name: req.body.name,
       working_hours: req.body.working_hours,
@@ -29,13 +28,12 @@ class DoctorService {
   async getOneById(_id: string) {
     try {
       const data = await Doctor.findById(_id);
-      
+
       if (!data) {
         throw { message: 'Doctor does not exist!' };
       }
 
       return data;
-
     } catch (error: any) {
       throw error;
     }

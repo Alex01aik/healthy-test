@@ -3,14 +3,13 @@ import mongoose from 'mongoose';
 const workingHoursSchema = new mongoose.Schema({
   from: {
     type: String,
-    required: true
+    required: true,
   },
   to: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
 });
-
 
 const Doctor = new mongoose.Schema({
   name: {
@@ -19,8 +18,8 @@ const Doctor = new mongoose.Schema({
   },
   working_hours: {
     type: Map,
-    of: workingHoursSchema
-  }
+    of: workingHoursSchema,
+  },
 });
 
 export default mongoose.model('Doctor', Doctor);
