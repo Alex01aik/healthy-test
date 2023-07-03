@@ -1,4 +1,5 @@
-##This is MVP "Helthy" API to make appointment to doctor##
+## This is MVP "Helthy" API to make appointment to doctor
+
 For starting app create .env with fields PORT, DB_URL, MIN_PERIOD, MAIL_HOST, MAIL_USER, MAIL_PASSWORD is nessesary
 
 To create user use POST on route:
