@@ -18,12 +18,12 @@ export class MailNotificationProvider implements INotificationProvider<string> {
         },
       );
     
-    async sendNotification(email: string, code?: string) {
+    async sendNotification(email: string, ctx?: string) {
         await this.transport.sendMail(
           {
             to: `${email}`,
             subject: 'Reminder to visit doctor',
-            html: `<h2>${code ?? 'Go to doctor'}</h2>`,
+            html: `<h2>${ctx ?? 'Go to doctor'}</h2>`,
           },
           (err: any) => {
             return console.error(err);

@@ -7,8 +7,8 @@ export class NotificationProvider<T> {
       this.notificationProvider = notificationProvider;
     }
   
-    async sendNotificationToUser(user: T, message: string): Promise<any> {
-      return this.notificationProvider.sendNotification(user, message);
+    async sendNotificationToUser(recipient: T, ctx?: string): Promise<any> {
+      return this.notificationProvider.sendNotification(recipient, ctx);
     }
   }
   
