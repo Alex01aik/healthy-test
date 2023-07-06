@@ -1,28 +1,17 @@
-import { Request, Response } from 'express';
 import User from './model';
 
 class UserService {
-  async createOne(req: Request, res: Response) {
-    try {
+  async createOne(args: {name: string, email: string}) {
       const data = new User({
-        name: req.body.name,
-        email: req.body.email,
+        name: args.name,
+        email: args.email,
       });
 
-      const saved = await data.save();
-      res.status(200).json(saved);
-    } catch (error: any) {
-      res.status(400).json({ message: error?.message });
-    }
+      return await data.save();
   }
 
-  async getAll(req: Request, res: Response) {
-    try {
-      const data = await User.find();
-      res.json(data);
-    } catch (error: any) {
-      res.status(500).json({ message: error?.message });
-    }
+  async getAll() {
+      return await User.find();
   }
 
   async isExist(_id: string) {

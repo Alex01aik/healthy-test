@@ -1,22 +1,17 @@
-import { Request, Response } from 'express';
 import Appointment from './model';
 import userService from '../user/service';
 import doctorService from '../doctor/service';
 import { CreateOneAppointmentArgs } from './types/CreateOneAppointmentArgs';
-import dotenv from 'dotenv';
 
-dotenv.config();
 
 class AppointmentService {
   async createOne(
-    req: Request & { body: CreateOneAppointmentArgs },
-    res: Response,
+    args: CreateOneAppointmentArgs,
   ) {
-    try {
-      const userId: string = req.body.userId;
-      const doctorId: string = req.body.doctorId;
-      const date: Date = new Date(req.body.date);
-      const duration: number = Number(req.body.duration);
+      const userId: string = args.userId;
+      const doctorId: string = args.doctorId;
+      const date: Date = args.date;
+      const duration: number = Number(args.duration);
 
       date.setSeconds(0);
       date.setMilliseconds(0);
@@ -30,12 +25,8 @@ class AppointmentService {
         till: this.calculateTillDate(date, duration),
       });
 
-      const saved = await data.save();
-      res.status(200).json(saved);
-      
-    } catch (error: any) {
-      res.status(400).json({ message: error?.message });
-    }
+      return await data.save();
+
   }
 
   async validate(
@@ -48,7 +39,7 @@ class AppointmentService {
       userService.isExist(userId),
       doctorService.isExist(doctorId),
       this.validateDuration(duration),
-      this.validateDate(date, duration, doctorId),
+      this.validateOrderDate(date, duration, doctorId),
     ]);
     await this.isDoctorAccess(doctorId, date, duration);
   }
@@ -69,7 +60,12 @@ class AppointmentService {
     }
   }
 
-  async validateDate(date: Date, duration: number, doctorId: string) {
+  async validateOrderDate(date: Date, duration: number, doctorId: string) {
+    if (date < new Date()) {
+      throw {
+        message: 'Order future appointment',
+      };
+    }
     const minutes = date.getMinutes();
     if (minutes % Number(process.env.MIN_PERIOD) !== 0) {
       throw {
@@ -153,6 +149,18 @@ class AppointmentService {
         throw { message: 'Wrong date!' };
       }
     }
+  }
+
+  formatDateAccordingToTimeZone(clientTimeZone: string | string[] | undefined, dateString: string) {
+    const date = new Date(dateString);
+    if (clientTimeZone) {
+      const timeZone = typeof clientTimeZone === 'string' ? clientTimeZone : clientTimeZone.join(' ');
+      const serverTime: Date = new Date();
+      const clientTime: Date = new Date(new Date().toLocaleString('en-US', { timeZone }));
+      const timeDiff: number = Math.floor((serverTime.getTime() - clientTime.getTime()) / (1000 * 60 * 60));
+      date.setHours(date.getHours() + timeDiff);
+    }
+    return date;
   }
 }
 

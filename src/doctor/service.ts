@@ -1,28 +1,16 @@
-import { Request, Response } from 'express';
 import Doctor from './model';
 
 class DoctorService {
-  async createOne(req: Request, res: Response) {
-    try {
+  async createOne(args: {name: string, working_hours: any}) {
       const data = new Doctor({
-        name: req.body.name,
-        working_hours: req.body.working_hours,
+        name: args.name,
+        working_hours: args.working_hours,
       });
-
-      const saved = await data.save();
-      res.status(200).json(saved);
-    } catch (error: any) {
-      res.status(400).json({ message: error?.message });
-    }
+      return await data.save();
   }
 
-  async getAll(req: Request, res: Response) {
-    try {
-      const data = await Doctor.find();
-      res.json(data);
-    } catch (error: any) {
-      res.status(500).json({ message: error?.message });
-    }
+  async getAll() {
+      return await Doctor.find();
   }
 
   async getOneById(_id: string) {

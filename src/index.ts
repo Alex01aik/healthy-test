@@ -3,7 +3,6 @@ import cors from 'cors';
 import appointmentRouter from './appointment/router';
 import userRouter from './user/router';
 import doctorRouter from './doctor/router';
-import mongoose from 'mongoose';
 import notificationService from './notification/service';
 import { connect } from './db/connect';
 import dotenv from 'dotenv';

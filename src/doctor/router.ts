@@ -4,11 +4,21 @@ import doctorService from './service';
 const router = express.Router();
 
 router.post('/', async (req: Request, res: Response) => {
-  await doctorService.createOne(req, res);
+  try {
+    const saved = await doctorService.createOne(req.body);
+    res.status(200).json(saved);
+  } catch (error: any) {
+    res.status(400).json({ message: error?.message });
+  }
 });
 
 router.get('/all', async (req: Request, res: Response) => {
-  await doctorService.getAll(req, res);
+  try {
+    const data = await doctorService.getAll();
+    res.json(data);
+  } catch (error: any) {
+    res.status(500).json({ message: error?.message });
+  }
 });
 
 export default router;
